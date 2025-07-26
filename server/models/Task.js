@@ -1,0 +1,26 @@
+const { Description } = require('@headlessui/react')
+const mongoose = require('mongoose')
+
+const taskSchema = new mongoose.Schema({
+    title:{
+        type: String,
+        required:[true, 'Please add a title']
+    },
+    description:{
+        type: String,
+        default: ''
+    },
+    
+    deadline:{
+        type: Date,
+        default: null
+    },
+    isCompleted: {
+        type: Boolean,
+        default: false
+    }
+}, {
+    timestamps: true
+});
+
+module.exports = mongoose.model('Task', taskSchema);
