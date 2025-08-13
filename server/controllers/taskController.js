@@ -40,15 +40,30 @@ exports.createTask = async (req, res) => {
 // @desc    Update a task
 // @route   PUT /api/tasks/:id
 exports.updateTask = async (req, res) => {
-    try{
-        const update = req.body;
-        const task = await Task.findByIdAndUpdate(req.aparams.id, updates, {new: true});
-        if(!task) return res.status(404).json({message: 'Task not found'});
-        res.status(200).json(task);
-    }catch(err){
-        res.status(400).json({ message: err.message});
-    }
-};
+  try {
+    const { title, description, deadline, isCompleted } = req.body
+
+    const update = {}
+    if (title !== undefined) update.title = title
+    if (description !== undefined) update.description = description
+    if (deadline !== undefined) update.deadline = deadline || null
+    if (isCompleted !== undefined) update.isCompleted = isCompleted
+
+    const task = await Task.findByIdAndUpdate(
+      req.params.id,
+      update,
+      {
+        new: true,           
+        runValidators: true  
+      }
+    )
+    if (!task) return res.status(404).json({ message: 'Task not found' })
+    res.status(200).json(task)
+  } catch (err) {  
+    res.status(400).json({ message: err.message })
+  }
+}
+;
 
 // @desc    Delete a task
 // @route   DELETE /api/tasks/:id
